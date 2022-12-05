@@ -2,7 +2,9 @@
 V
 '''
 
-from nn_base import Layer, tanh, tanh_prime, mse, mse_prime
+from env import Graph, Node
+from nn_base import Layer, relu, relu_prime, mse, mse_prime
+from graph_utils import bfs
 import time
 import numpy as np
 import pickle as pk
@@ -45,22 +47,49 @@ class V:
         return self.result
 
 def main():
-    # X=None
-    # y=None
-
-    x_train = np.array([[[0,0]], [[0,1]], [[1,0]], [[1,1]]])
-    y_train = np.array([[[0]], [[1]], [[1]], [[0]]])
-
-    v_model=V(epochs=1000)
-    v_model.add_layer(Layer(0, input_len=2, output_len=3))
-    v_model.add_layer(Layer(1, activation=tanh, activation_prime=tanh_prime))
-    v_model.add_layer(Layer(0, input_len=3, output_len=1))
-    v_model.add_layer(Layer(1, activation=tanh, activation_prime=tanh_prime))
+    with open('./done/qtable_graph_1.pkl', 'rb') as f:
+        q = pk.load(f)
+    with open('./done/graph_1.pkl', 'rb') as f:
+        g = pk.load(f)
+    
+    X = [list(x) for x in q if x[0] != x[2] and x[0] != x[1]]
+    y = [[[min(q[tuple(x)])]] for x in X]
+    dist = dict()
+    for i in X:
+        if (i[0], i[1]) not in dist:
+            dist[(i[0], i[1])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[1]]))
+        if (i[0], i[2]) not in dist:
+            dist[(i[0], i[2])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[2]]))
+        if (i[1], i[2]) not in dist:
+            dist[(i[1], i[2])] = len(bfs(g.graph_nodes[i[1]], g.graph_nodes[i[2]]))
+        i.append(dist[(i[0], i[1])])
+        i.append(dist[(i[0], i[2])])
+        i.append(dist[(i[1], i[2])])
+    X = [[x] for x in X]
+    X=np.array(X)
+    y=np.array(y)
+    # print(f'X dims: {X.shape}, y dims: {y.shape}')
+    
+    v_model=V(epochs=10000)
+    v_model.add_layer(Layer(0, input_len=6, output_len=12))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=12, output_len=24))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=24, output_len=48))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=48, output_len=24))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=24, output_len=12))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=12, output_len=6))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=6, output_len=1))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
 
     v_model.loss_function(mse, mse_prime)
-    v_model.train(x_train, y_train, l_rate=0.1)
+    v_model.train(X, y, l_rate=0.1)
 
-    pk.dump(v_model, 'v.pkl', 'wb')
+    # pk.dump(v_model, 'v.pkl', 'wb')
 
 if __name__=='__main__':
     main()

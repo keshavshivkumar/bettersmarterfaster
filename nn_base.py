@@ -2,7 +2,6 @@
 neural network classes
 '''
 
-# from abc import abstractmethod
 import numpy as np
 
 
@@ -13,8 +12,8 @@ class Layer:
         self.input_len = input_len
         self.output_len = output_len
         if input_len != None:
-            self.weights = np.random.randn(self.input_len, self.output_len)
-            self.bias = np.random.randn(1, self.output_len)
+            self.weights = np.random.rand(self.input_len, self.output_len) - 0.5
+            self.bias = np.random.rand(1, self.output_len) - 0.5
         self.activation = activation
         self.activation_prime = activation_prime
         self.layer_bool = FC_or_Act
@@ -37,37 +36,6 @@ class Layer:
             error = self.activation_prime(self.input) * loss
         return error
 
-
-# class FCLayer(Layer):
-#     def __init__(self, weights, bias) -> None:
-#         super().__init__()
-#         self.weights = weights
-#         self.bias = bias
-    
-#     def forward_propogate(self, input):
-#         self.input=input
-#         self.output=np.dot(self.input,self.weights)+self.bias
-#         return self.output
-
-#     def backward_propogate(self, loss, l_rate):
-#         return super().backward_propogate(loss, l_rate)
-
-
-# class ActivationLayer(Layer):
-#     def __init__(self, activation_func, activation_derivative_func) -> None:
-#         super().__init__()
-#         self.activation=activation_func
-#         self.activation_derivative=activation_derivative_func
-
-#     def forward_propogate(self, input):
-#         self.input=input
-#         self.output=self.activation(self.input)
-#         return self.output
-
-#     def backward_propogate(self, loss, l_rate):
-#         return super().backward_propogate(loss, l_rate)
-
-
 '''
 Activation Functions
 '''
@@ -85,10 +53,10 @@ def tanh_prime(x):
     return 1-(tanh(x)**2)
 
 def relu(x):
-    return max(0,x)
+    return x * (x > 0)
 
 def relu_prime(x):
-    return 1 * (x>0)
+    return 1 * (x > 0)
 
 '''
 Loss Functions
