@@ -12,15 +12,12 @@ class Layer:
         self.output = None
         self.input_len = input_len
         self.output_len = output_len
-        self.weights = np.random.rand(self.input_len, self.output_len)
-        self.bias = np.random.rand(self.output_len)
+        if input_len != None:
+            self.weights = np.random.randn(self.input_len, self.output_len)
+            self.bias = np.random.randn(1, self.output_len)
         self.activation = activation
         self.activation_prime = activation_prime
         self.layer_bool = FC_or_Act
-
-    def weight_bias_initialize(self):
-        self.weights = np.random.rand(self.input_len, self.output_len)
-        self.bias = np.random.rand(self.output_len,)
 
     def forward_propogate(self, input_data):
         self.input = input_data
