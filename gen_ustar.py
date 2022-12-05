@@ -11,7 +11,8 @@ from graph_utils import bfs
 
 class UstarGen:
     def mk_initial_table(self):
-        if self.filename in os.listdir(g_v.qtable_folder):
+        if f'qtable_{self.filename}' in os.listdir(g_v.qtable_folder):
+            print('here')
             with open(f'{g_v.qtable_folder}/qtable_{self.filename}', 'rb') as f:
                 q = pk.load(f)
         else:
@@ -128,9 +129,8 @@ class UstarGen:
             self.save_qtable()
 
 if __name__ == '__main__':
-    if os.path.exists(g_v.qtable_folder):
-        shutil.rmtree(g_v.qtable_folder)
-    os.mkdir(g_v.qtable_folder)
+    if not os.path.exists(g_v.qtable_folder):
+        os.mkdir(g_v.qtable_folder)
     g : Graph = None
     for filename in os.listdir(g_v.graph_folder):
         with open(f'{g_v.graph_folder}/{filename}', 'rb') as f:
