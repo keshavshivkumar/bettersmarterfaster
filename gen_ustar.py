@@ -75,10 +75,10 @@ class UstarGen:
         return matrix
 
     def __init__(self, g: Graph, filename) -> None:
-        self.epochs = 100
+        self.epochs = 60
 
         self.graph_nodes :list[Node]= g.graph_nodes
-        self.state = (4,16,13)
+        self.state = (0,25,16)
         self.filename = filename
         self.prey_transition_matrix = self.prey_transition()
 
