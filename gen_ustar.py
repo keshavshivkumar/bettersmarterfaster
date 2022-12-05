@@ -78,7 +78,7 @@ class UstarGen:
         self.epochs = 60
 
         self.graph_nodes :list[Node]= g.graph_nodes
-        self.state = (0,25,16)
+        self.state = (41,14,14)
         self.filename = filename
         self.prey_transition_matrix = self.prey_transition()
 
