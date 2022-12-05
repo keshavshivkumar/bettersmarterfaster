@@ -1,9 +1,11 @@
 # environment for Circle of Life
 import random
+import shutil
 from typing import Tuple
 import global_variables as g_v
 import pickle as pk
 from entities import Agent, Prey, DistractedPredator
+import os
 
 class Node:
     def __init__(self, pos, agent = False, prey = False, predator = False) -> None:
@@ -105,28 +107,15 @@ class Graph:
 
 
 def main():
-    g = Graph()
-    agent = Agent()
-    prey=Prey()
-    predator=DistractedPredator()
-    g.spawn_entities(agent, prey, predator)
-    entities=dict()
-    entities['Agent']=None
-    entities["Prey"]=None
-    entities["Predator"]=None
-    for node in g.graph_nodes:
-        print(f"{node.pos}: ({sorted([x.pos for x in node.neighbors])})")
-        if node.agent:
-            entities["Agent"]=node.pos
-        if node.prey:
-            entities["Prey"]=node.pos
-        if node.predator:
-            entities["Predator"]=node.pos
-    for i,j in entities.items():
-        print(f'{i}: {j}')
-    filename='graph.pkl'
-    filehandler = open(filename, 'wb')
-    pk.dump(g, filehandler)        
+    
+    if os.path.exists(g_v.graph_folder):
+        shutil.rmtree(g_v.graph_folder)
+    os.mkdir(g_v.graph_folder)
+    for i in range(10):
+        g = Graph()
+        filename= f'{g_v.graph_folder}/graph_{i+1}.pkl'
+        with open(filename, 'wb') as filehandler:
+            pk.dump(g, filehandler)
 
 if __name__ == "__main__":
     main()
