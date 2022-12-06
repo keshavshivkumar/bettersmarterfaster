@@ -29,12 +29,12 @@ class V:
             for node in range(len(x_train)):
                 out = x_train[node]
                 for layer in self.layers:
-                    out=layer.forward_propogate(out)
+                    out=layer.forward_propagate(out)
                 error+=self.loss(y_train[node], out)
                 error_prime=self.loss_prime(y_train[node], out)
-                rev_layers=self.layers[::-1]
-                for layer in rev_layers:
-                    error_prime=layer.back_propogate(error_prime, l_rate)
+
+                for layer in reversed(self.layers):
+                    error_prime=layer.back_propagate(error_prime, l_rate)
             error/=len(x_train)
             print(f'Epoch {iter}, Elapsed Time: {time.time()-start}, Error: {error}')
 
@@ -42,7 +42,7 @@ class V:
         for i in range(len(input)):
             out=input[i]
             for layer in self.layers:
-                out=layer.forward_propogate(out)
+                out=layer.forward_propagate(out)
             self.result.append(out)
         return self.result
 
@@ -66,29 +66,29 @@ def main():
         i.append(dist[(i[0], i[2])])
         i.append(dist[(i[1], i[2])])
     X = [[x] for x in X]
-    X=np.array(X)
-    y=np.array(y)
+    X=np.array(X, dtype=float)
+    y=np.array(y, dtype=float)
     # print(f'X dims: {X.shape}, y dims: {y.shape}')
     
-    v_model=V(epochs=10000)
+    v_model=V(epochs=100)
     v_model.add_layer(Layer(0, input_len=6, output_len=12))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    v_model.add_layer(Layer(0, input_len=12, output_len=24))
-    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    v_model.add_layer(Layer(0, input_len=24, output_len=48))
-    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    v_model.add_layer(Layer(0, input_len=48, output_len=24))
-    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    v_model.add_layer(Layer(0, input_len=24, output_len=12))
-    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    # v_model.add_layer(Layer(0, input_len=12, output_len=24))
+    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    # v_model.add_layer(Layer(0, input_len=24, output_len=48))
+    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    # v_model.add_layer(Layer(0, input_len=48, output_len=24))
+    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    # v_model.add_layer(Layer(0, input_len=24, output_len=12))
+    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
     v_model.add_layer(Layer(0, input_len=12, output_len=6))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
     v_model.add_layer(Layer(0, input_len=6, output_len=1))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
 
     v_model.loss_function(mse, mse_prime)
-    v_model.train(X, y, l_rate=0.1)
-
+    v_model.train(X, y, l_rate=0.001)
+    print(len(X))
     # pk.dump(v_model, 'v.pkl', 'wb')
 
 if __name__=='__main__':
