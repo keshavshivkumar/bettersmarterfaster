@@ -91,8 +91,8 @@ class AdamOptimizer():
 
   def update(self, param, beta1, beta2, m, v):
     g = param.gradient
-    m = beta1*m + (1-beta1)*g
-    v = beta2*v + (1-beta2)*(g)**2
+    m = 0.9*m + (1-0.9)*g
+    v = 0.999*v + (1-0.999)*(g)**2
 
     beta1 *= beta1
     beta2 *= beta2
@@ -141,23 +141,17 @@ class Learner():
 
 def main():
     num_features = 6 
-    epochs = 100
+    epochs = 4000
     batch_size = 1
     learning_rate = 0.001
     model = Sequential(
-        Linear(6, 12),
+        Linear(6, 24),
         ReLu(),
-        Linear(12, 24),
+        Linear(24, 128),
         ReLu(),
-        Linear(24, 64),
+        Linear(128, 1024),
         ReLu(),
-        Linear(64, 24),
-        ReLu(),
-        Linear(24, 12),
-        ReLu(),
-        Linear(12, 6),
-        ReLu(),
-        Linear(6, 1),
+        Linear(1024, 1),
         )
     l = Learner(model, mse_loss, AdamOptimizer(lr=learning_rate))
 
