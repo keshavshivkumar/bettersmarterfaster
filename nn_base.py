@@ -55,10 +55,10 @@ def tanh_prime(x):
     return 1-(tanh(x)**2)
 
 def relu(x):
-    return x * (x >= 0) + x * 0.01* (x < 0)
+    return x * (x >= 0) + x * 0.1 * (x < 0)
 
 def relu_prime(x):
-    return 1 * (x >= 0) + 0.01 *(x < 0)
+    return 1 * (x >= 0) + 0.1 * (x < 0)
 
 '''
 Loss Functions

@@ -36,7 +36,7 @@ class V:
                 for layer in reversed(self.layers):
                     error_prime=layer.back_propagate(error_prime, l_rate)
             error/=len(x_train)
-            print(f'Epoch {iter}, Elapsed Time: {time.time()-start}, Error: {error}')
+            print(f'Epoch {iter+1}, Elapsed Time: {time.time()-start}, Error: {error}')
 
     def predict(self, input):
         for i in range(len(input)):
@@ -73,21 +73,21 @@ def main():
     v_model=V(epochs=100)
     v_model.add_layer(Layer(0, input_len=6, output_len=12))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    # v_model.add_layer(Layer(0, input_len=12, output_len=24))
-    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    # v_model.add_layer(Layer(0, input_len=24, output_len=48))
-    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    # v_model.add_layer(Layer(0, input_len=48, output_len=24))
-    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
-    # v_model.add_layer(Layer(0, input_len=24, output_len=12))
-    # v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=12, output_len=24))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=24, output_len=48))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=48, output_len=24))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
+    v_model.add_layer(Layer(0, input_len=24, output_len=12))
+    v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
     v_model.add_layer(Layer(0, input_len=12, output_len=6))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
     v_model.add_layer(Layer(0, input_len=6, output_len=1))
     v_model.add_layer(Layer(1, activation=relu, activation_prime=relu_prime))
 
     v_model.loss_function(mse, mse_prime)
-    v_model.train(X, y, l_rate=0.001)
+    v_model.train(X, y, l_rate=0.0001)
     print(len(X))
     # pk.dump(v_model, 'v.pkl', 'wb')
 
