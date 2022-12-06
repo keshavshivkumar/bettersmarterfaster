@@ -2,6 +2,7 @@ import copy
 from time import perf_counter
 from env import Graph, Node
 from entities import Predator, Prey, Agent, DistractedPredator
+from viz import graph_viz
 from Agent1 import Agent1
 from Agent2 import Agent2
 from Agent3 import Agent3
@@ -9,6 +10,8 @@ from Agent4 import Agent4
 from ustar_Agent import UstarAgent
 import numpy as np
 import pickle as pk
+import os
+import imageio
 
 class Game:
     def __init__(self, agent: Agent, graph: Graph) -> None:
@@ -34,12 +37,28 @@ class Game:
             return False
 
         return True
+    
+    def game_viz(self):
+        graph_viz(self.graph, self.agent.node.pos, self.prey.node.pos, self.predator.node.pos, self.timestep)
+
+    def create_gif(self):
+        directory='viz'
+        images = os.listdir(directory)
+        filtered_images=[file for file in images if file.endswith('.png')]
+        with imageio.get_writer(directory+'/'+self.agent.__class__.__name__+'_viz.gif', mode='I') as writer:
+            for filename in filtered_images:
+                image = imageio.imread(directory+'/'+filename)
+                writer.append_data(image)
+            for filename in filtered_images:
+                filepath=os.path.join(directory, filename)
+                os.remove(filepath)
 
     def run(self):
         '''
         Update graph at every timestep
         '''
         while(self.running()):
+            self.game_viz()
             self.timestep += 1
             self.agent.move()
             if not self.running():
@@ -48,6 +67,8 @@ class Game:
             if not self.running(): # in case the prey moves into the agent's node
                 break
             self.predator.move()
+        self.game_viz()
+        self.create_gif()
         return self.victory, self.timestep
 
 def run_game(agent):
@@ -59,7 +80,7 @@ def run_game(agent):
 if __name__ == "__main__":
     a = perf_counter()
     num_agents = 2
-    iterations=100
+    iterations=1
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
