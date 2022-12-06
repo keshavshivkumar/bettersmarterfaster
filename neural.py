@@ -85,7 +85,7 @@ def ce_loss(Y_, Y):
   ce = np.inner(Y_ - log_den, Y)
   return ce.mean(), Y - prob / len(Y)
 
-class SGDOptimizer():
+class AdamOptimizer():
   def __init__(self, lr=0.1):
     self.lr = lr
 
@@ -135,9 +135,13 @@ class Learner():
       print(f'Epoch: {epoch}, Loss: {loss}')
     return losses
 
+  def predict(self, X):
+    Y, _ = self.model.forward(X)
+    return Y
+
 def main():
     num_features = 6 
-    epochs = 10000
+    epochs = 100
     batch_size = 1
     learning_rate = 0.001
     model = Sequential(
@@ -145,14 +149,17 @@ def main():
         ReLu(),
         Linear(12, 24),
         ReLu(),
+        Linear(24, 64),
+        ReLu(),
+        Linear(64, 24),
+        ReLu(),
         Linear(24, 12),
         ReLu(),
         Linear(12, 6),
         ReLu(),
         Linear(6, 1),
-        ReLu(),
         )
-    l = Learner(model, mse_loss, SGDOptimizer(lr=learning_rate))
+    l = Learner(model, mse_loss, AdamOptimizer(lr=learning_rate))
 
     with open('./done/qtable_graph_1.pkl', 'rb') as f:
         q = pk.load(f)
@@ -179,10 +186,11 @@ def main():
     # Y = X @ W + B + 0.01 * np.random.randn(num_samples, 1)
     loss=l.fit_batch(X, y, epochs=epochs)
     print(loss[-1])
-    plt.plot(loss)
-    plt.show()
-    # print('Weight Matrix Error', np.linalg.norm(m.weights.tensor - W))
-    # print('Bias error', np.abs(m.bias.tensor - B)[0])
+    # plt.plot(loss)
+    # plt.show()
+
+    with open('v.pkl', 'wb') as f:
+      pk.dump(l, f)
 
 if __name__=='__main__':
     main()
