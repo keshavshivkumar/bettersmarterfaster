@@ -8,6 +8,10 @@ class Parameter():
   def __init__(self, tensor):
     self.tensor = tensor
     self.gradient = np.zeros_like(self.tensor)
+    self.beta1 = 0.9
+    self.beta2 = 0.999
+    self.m = 0
+    self.v = 0
 
 class Layer:
   def __init__(self):
@@ -22,7 +26,8 @@ class Layer:
     return param
 
   def update(self, optimizer):
-    for param in self.parameters: optimizer.update(param)
+    for param in self.parameters:      
+      param.beta1, param.beta2, param.m, param.v = optimizer.update(param, param.beta1, param.beta2, param.m, param.v)
 
 class Linear(Layer):
   def __init__(self, inputs, outputs):
@@ -84,9 +89,22 @@ class SGDOptimizer():
   def __init__(self, lr=0.1):
     self.lr = lr
 
-  def update(self, param):
-    param.tensor -= self.lr * param.gradient
+  def update(self, param, beta1, beta2, m, v):
+    g = param.gradient
+    m = beta1*m + (1-beta1)*g
+    v = beta2*v + (1-beta2)*(g)**2
+
+    beta1 *= beta1
+    beta2 *= beta2
+
+    mhat = m/(1-beta1)
+    vhat = v/(1-beta2)
+
+    param.tensor -= (self.lr * mhat)/(vhat**0.5 + 1e-8)    
+    # param.tensor -= self.lr * g
     param.gradient.fill(0)
+
+    return (beta1, beta2, m, v)
 
 class Learner():
   def __init__(self, model, loss, optimizer):
@@ -94,12 +112,16 @@ class Learner():
     self.loss = loss
     self.optimizer = optimizer
       
-  def fit_batch(self, X, Y):
-    Y_, backward = self.model.forward(X)
-    L, D = self.loss(Y_, Y)
-    backward(D)
-    self.model.update(self.optimizer)
-    return L
+  def fit_batch(self, X, Y, epochs):
+    losses=[]
+    for epoch in range(epochs):
+      Y_, backward = self.model.forward(X)
+      L, D = self.loss(Y_, Y)
+      backward(D)
+      self.model.update(self.optimizer)
+      losses.append(L)
+      print(f'Epoch: {epoch}, Loss: {L}')
+    return losses
 
   def fit(self, X, Y, epochs, bs):
     losses = []
@@ -110,13 +132,13 @@ class Learner():
       for i in range(0, len(X), bs):
         loss += self.fit_batch(X[i:i + bs], Y[i:i + bs])
       losses.append(loss)
-      print(f'Epoch: {epoch}, Loss: {loss/bs}')
+      print(f'Epoch: {epoch}, Loss: {loss}')
     return losses
 
 def main():
     num_features = 6 
     epochs = 10000
-    batch_size = 10
+    batch_size = 1
     learning_rate = 0.001
     model = Sequential(
         Linear(6, 12),
@@ -155,7 +177,7 @@ def main():
     W = np.random.randn(num_features, 1)
     B = np.random.randn(1)
     # Y = X @ W + B + 0.01 * np.random.randn(num_samples, 1)
-    loss=l.fit(X, y, epochs=epochs, bs=batch_size)
+    loss=l.fit_batch(X, y, epochs=epochs)
     print(loss[-1])
     plt.plot(loss)
     plt.show()
