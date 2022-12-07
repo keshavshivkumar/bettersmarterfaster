@@ -76,6 +76,11 @@ class Sigmoid(Layer):
 def mse_loss(Y_, Y):
   diff = Y_ - Y.reshape(Y_.shape)
   return np.square(diff).mean(), 2 * diff / len(diff)
+
+def mae_loss(Y_, Y):
+  diff = abs(Y_ - Y.reshape(Y_.shape))
+  dprime = 1*(Y_>=Y) + -1*(Y_<Y)
+  return diff.mean(), dprime
   
 def ce_loss(Y_, Y):
   num = np.exp(Y_)
@@ -141,19 +146,19 @@ class Learner():
 
 def main():
     num_features = 6 
-    epochs = 4000
+    epochs = 5000
     batch_size = 1
-    learning_rate = 0.001
+    learning_rate = 0.01
     model = Sequential(
-        Linear(6, 24),
+        Linear(6, 256),
         ReLu(),
-        Linear(24, 128),
+        Linear(256, 128),
         ReLu(),
-        Linear(128, 1024),
+        Linear(128, 24),
         ReLu(),
-        Linear(1024, 1),
+        Linear(24, 1),
         )
-    l = Learner(model, mse_loss, AdamOptimizer(lr=learning_rate))
+    l = Learner(model, mae_loss, AdamOptimizer(lr=learning_rate))
 
     with open('./done/qtable_graph_1.pkl', 'rb') as f:
         q = pk.load(f)
@@ -183,7 +188,7 @@ def main():
     # plt.plot(loss)
     # plt.show()
 
-    with open('v.pkl', 'wb') as f:
+    with open('v2.pkl', 'wb') as f:
       pk.dump(l, f)
 
 if __name__=='__main__':
