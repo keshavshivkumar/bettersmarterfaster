@@ -51,10 +51,3 @@ def graph_viz(graph, agent_pos, prey_pos, predator_pos, timestep):
         plt.savefig(f'viz/{timestep}_{i}.png')
     # plt.show()
 
-def main():
-    with open('./done/graph_1.pkl', 'rb') as f:
-        graph = pk.load(f)
-    graph_viz(graph, 0, 4, 10, 20)
-
-if __name__=='__main__':
-    main()
