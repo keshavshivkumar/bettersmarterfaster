@@ -21,7 +21,7 @@ class Game:
         self.graph = graph
         self.graph.spawn_entities(self.agent, self.prey, self.predator)
         self.agent.graph_nodes = graph.graph_nodes
-        self.maxtimestep = 50
+        self.maxtimestep = 150
         self.timestep = 0
         self.victory = (False, False)
 
@@ -58,7 +58,7 @@ class Game:
         Update graph at every timestep
         '''
         while(self.running()):
-            self.game_viz()
+            # self.game_viz()
             self.timestep += 1
             self.agent.move()
             if not self.running():
@@ -67,12 +67,12 @@ class Game:
             if not self.running(): # in case the prey moves into the agent's node
                 break
             self.predator.move()
-        self.game_viz()
-        self.create_gif()
+        # self.game_viz()
+        # self.create_gif()
         return self.victory, self.timestep
 
 def run_game(agent):
-    with open('./done/graph_1.pkl','rb') as f:
+    with open('./done/graph_3.pkl','rb') as f:
         graph = pk.load(f)
     game = Game(agent, graph)
     return game.run()
@@ -80,11 +80,11 @@ def run_game(agent):
 if __name__ == "__main__":
     a = perf_counter()
     num_agents = 2
-    iterations=1
+    iterations=100
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
-    with open('./done/qtable_graph_1.pkl','rb') as f:
+    with open('./done/qtable_graph_3.pkl','rb') as f:
         q = pk.load(f)
     for _ in range(iterations):
         victories = []

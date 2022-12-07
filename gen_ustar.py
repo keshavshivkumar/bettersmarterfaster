@@ -75,7 +75,7 @@ class UstarGen:
         return matrix
 
     def __init__(self, g: Graph, filename) -> None:
-        self.epochs = 60
+        self.epochs = 100
 
         self.graph_nodes :list[Node]= g.graph_nodes
         self.state = (41,14,14)
@@ -105,12 +105,12 @@ class UstarGen:
                     else:
                         next_agent_pos = agent_pos
                     
-                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                        ustars = [(action, 1)]
-                        break
-                    elif pred_pos == next_agent_pos:
-                        ustars.append((action, 10000))
-                        continue
+                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                    #     ustars = [(action, 1)]
+                    #     break
+                    # if pred_pos == next_agent_pos:
+                    #     ustars.append((action, 10000))
+                    #     continue
 
                     s = 0
                     prey_prob = 1/len(self.prey_transition_matrix[prey_pos])
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     if not os.path.exists(g_v.qtable_folder):
         os.mkdir(g_v.qtable_folder)
     g : Graph = None
-    for filename in os.listdir(g_v.graph_folder):
+    for filename in os.listdir(g_v.graph_folder)[1:]:
         with open(f'{g_v.graph_folder}/{filename}', 'rb') as f:
             g = pk.load(f)        
         

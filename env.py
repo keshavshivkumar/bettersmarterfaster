@@ -77,7 +77,7 @@ class Graph:
         self.graph_nodes : list[Node] = []
         self.init_nodes()
         self.make_circle()
-        self.add_new_edges()
+        # self.add_new_edges()
 
     def get_random_positions(self):
         positions = list(range(g_v.Number_of_nodes))
@@ -108,10 +108,10 @@ class Graph:
 
 def main():
     
-    if os.path.exists(g_v.graph_folder):
-        shutil.rmtree(g_v.graph_folder)
-    os.mkdir(g_v.graph_folder)
-    for i in range(10):
+    # if os.path.exists(g_v.graph_folder):
+    #     shutil.rmtree(g_v.graph_folder)
+    # os.mkdir(g_v.graph_folder)
+    for i in range(2,3):
         g = Graph()
         filename= f'{g_v.graph_folder}/graph_{i+1}.pkl'
         with open(filename, 'wb') as filehandler:
