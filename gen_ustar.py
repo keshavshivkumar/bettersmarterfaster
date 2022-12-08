@@ -11,9 +11,9 @@ from graph_utils import bfs
 
 class UstarGen:
     def mk_initial_table(self):
-        if f'qtable_{self.filename}' in os.listdir(g_v.qtable_folder):
+        if f'utable_{self.filename}' in os.listdir(g_v.utable_folder):
             print('here')
-            with open(f'{g_v.qtable_folder}/qtable_{self.filename}', 'rb') as f:
+            with open(f'{g_v.utable_folder}/utable_{self.filename}', 'rb') as f:
                 q = pk.load(f)
         else:
             q = dict()
@@ -22,7 +22,7 @@ class UstarGen:
                     for predator in range(g_v.Number_of_nodes):
                         # degree = self.graph_nodes[agent].degree() + 1
                         # actions = np.zeros(degree) + 100000
-                        ustar = 1
+                        ustar = 25
                         if predator == agent:
                             # actions += 100000000
                             ustar += 10000000
@@ -87,16 +87,16 @@ class UstarGen:
         self.prey_transition_matrix = self.prey_transition()
 
 
-        self.qtable = self.mk_initial_table()
+        self.utable = self.mk_initial_table()
 
-    def save_qtable(self):
-        filename = f'{g_v.qtable_folder}/qtable_{self.filename}'
+    def save_utable(self):
+        filename = f'{g_v.utable_folder}/utable_{self.filename}'
         with open(filename, 'wb') as f:
-            pk.dump(self.qtable, f)
+            pk.dump(self.utable, f)
 
     def run(self):
         for i in range(self.epochs):
-            for state in self.qtable:
+            for state in self.utable:
                 ustars = []
                 agent_pos, prey_pos, pred_pos = state
                 if agent_pos == prey_pos or agent_pos == pred_pos:
@@ -109,12 +109,12 @@ class UstarGen:
                     else:
                         next_agent_pos = agent_pos
                     
-                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                        ustars = [1]
-                        break
-                    if pred_pos == next_agent_pos:
-                        ustars.append(10000)
-                        continue
+                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                    #     ustars = [1]
+                    #     break
+                    # if pred_pos == next_agent_pos:
+                    #     ustars.append(10000)
+                    #     continue
 
                     s = 0
                     prey_prob = 1/len(self.prey_transition_matrix[prey_pos])
@@ -122,20 +122,20 @@ class UstarGen:
                     for next_prey_pos in self.prey_transition_matrix[prey_pos]:
                         for next_pred_pos in pred_prob_dict:
                             new_state = (next_agent_pos, next_prey_pos, next_pred_pos)
-                            s+= prey_prob * pred_prob_dict[next_pred_pos] * self.qtable[new_state]
+                            s+= prey_prob * pred_prob_dict[next_pred_pos] * self.utable[new_state]
                     s+=1
                     ustars.append(s)
 
                 # beststar = min(ustars, key=lambda x: x[1])
                 bestustar = min(ustars)
                 # best_action, best_u  = beststar[0], beststar[1]
-                self.qtable[state] = bestustar
-            print(f'{self.qtable[self.state]}, {self.state}, {i+1}')
-            self.save_qtable()
+                self.utable[state] = bestustar
+            print(f'{self.utable[self.state]}, {self.state}, {i+1}')
+            self.save_utable()
 
 if __name__ == '__main__':
-    if not os.path.exists(g_v.qtable_folder):
-        os.mkdir(g_v.qtable_folder)
+    if not os.path.exists(g_v.utable_folder):
+        os.mkdir(g_v.utable_folder)
     g : Graph = None
     for filename in os.listdir(g_v.graph_folder)[:1]:
         with open(f'{g_v.graph_folder}/{filename}', 'rb') as f:
