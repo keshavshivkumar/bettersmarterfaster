@@ -109,12 +109,12 @@ class UstarGen:
                     else:
                         next_agent_pos = agent_pos
                     
-                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                    #     ustars = [1]
-                    #     break
-                    # if pred_pos == next_agent_pos:
-                    #     ustars.append(10000)
-                    #     continue
+                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                        ustars = [1]
+                        break
+                    if pred_pos == next_agent_pos:
+                        ustars.append(10000)
+                        continue
 
                     s = 0
                     prey_prob = 1/len(self.prey_transition_matrix[prey_pos])

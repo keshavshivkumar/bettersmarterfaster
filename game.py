@@ -73,7 +73,7 @@ class Game:
         return self.victory, self.timestep
 
 def run_game(agent):
-    with open('./graphs/graph_4.pkl','rb') as f:
+    with open('./graphs/graph_1.pkl','rb') as f:
         graph = pk.load(f)
     game = Game(agent, graph)
     return game.run()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
-    with open('./qtable/qtable_graph_4.pkl','rb') as f:
+    with open('./utable/utable_graph_1.pkl','rb') as f:
         q = pk.load(f)
     for _ in range(iterations):
         victories = []

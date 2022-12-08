@@ -55,10 +55,10 @@ class VAgent(Agent):
             matrix[node_pos] = positions
         return matrix
 
-    def __init__(self, node=None, qtable = None) -> None:
+    def __init__(self, node=None, utable = None) -> None:
         super().__init__(node)
         self.init = True
-        self.qtable = qtable
+        self.utable = utable
         # with open('v2.pkl','rb') as f:
         #     self.v = pk.load(f)
 
@@ -118,7 +118,7 @@ class VAgent(Agent):
             chosen = neighbors[best_action]
         else:
             chosen = self.node
-        # print(curr_state, min(self.qtable[curr_state]), chosen.pos)
+        # print(curr_state, min(self.utable[curr_state]), chosen.pos)
         return chosen
             
 

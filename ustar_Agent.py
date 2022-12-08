@@ -52,9 +52,9 @@ class UstarAgent(Agent):
             matrix[node_pos] = positions
         return matrix
 
-    def __init__(self, node=None, qtable = None) -> None:
+    def __init__(self, node=None, utable = None) -> None:
         super().__init__(node)
-        self.qtable = qtable
+        self.utable = utable
         self.init = True
 
     def best_action(self, curr_state):
@@ -77,7 +77,7 @@ class UstarAgent(Agent):
             for next_prey_pos in self.prey_transition_matrix[prey_pos]:
                 for next_pred_pos in pred_prob_dict:
                     new_state = (next_agent_pos, next_prey_pos, next_pred_pos)
-                    s+= prey_prob * pred_prob_dict[next_pred_pos] * self.qtable[new_state]
+                    s+= prey_prob * pred_prob_dict[next_pred_pos] * self.utable[new_state]
             s+=1
             ustars.append(s)
         best_action = np.argmin(ustars)
@@ -87,7 +87,7 @@ class UstarAgent(Agent):
             chosen = neighbors[best_action]
         else:
             chosen = self.node
-        # print(curr_state, min(self.qtable[curr_state]), chosen.pos)
+        # print(curr_state, min(self.utable[curr_state]), chosen.pos)
         return chosen
             
 
