@@ -8,6 +8,7 @@ from Agent2 import Agent2
 from Agent3 import Agent3
 from Agent4 import Agent4
 from ustar_Agent import UstarAgent
+from v_Agent import VAgent
 import numpy as np
 import pickle as pk
 import os
@@ -72,7 +73,7 @@ class Game:
         return self.victory, self.timestep
 
 def run_game(agent):
-    with open('./done/graph_3.pkl','rb') as f:
+    with open('./graphs/graph_4.pkl','rb') as f:
         graph = pk.load(f)
     game = Game(agent, graph)
     return game.run()
@@ -84,11 +85,11 @@ if __name__ == "__main__":
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
-    with open('./done/qtable_graph_3.pkl','rb') as f:
+    with open('./qtable/qtable_graph_4.pkl','rb') as f:
         q = pk.load(f)
     for _ in range(iterations):
         victories = []
-        agents = [UstarAgent(qtable=q), Agent1()]
+        agents = [UstarAgent(qtable=q), VAgent(qtable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         for agent in agents:

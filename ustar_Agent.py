@@ -68,7 +68,7 @@ class UstarAgent(Agent):
                 next_agent_pos = agent_pos
             
             if next_agent_pos == pred_pos:
-                ustars.append((action, 1000))
+                ustars.append(10000)
                 continue
 
             s = 0
@@ -77,11 +77,12 @@ class UstarAgent(Agent):
             for next_prey_pos in self.prey_transition_matrix[prey_pos]:
                 for next_pred_pos in pred_prob_dict:
                     new_state = (next_agent_pos, next_prey_pos, next_pred_pos)
-                    s+= prey_prob * pred_prob_dict[next_pred_pos] * min(self.qtable[new_state])
+                    s+= prey_prob * pred_prob_dict[next_pred_pos] * self.qtable[new_state]
             s+=1
-            ustars.append((action, s))
-        beststar = min(ustars, key=lambda x: x[1])
-        best_action, best_u  = beststar[0], beststar[1]
+            ustars.append(s)
+        best_action = np.argmin(ustars)
+        # beststar = min(ustars, key=lambda x: x[1])
+        # best_action, best_u  = beststar[0], beststar[1]
         if best_action != len(neighbors):
             chosen = neighbors[best_action]
         else:

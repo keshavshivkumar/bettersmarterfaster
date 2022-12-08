@@ -20,14 +20,17 @@ class UstarGen:
             for agent in range(g_v.Number_of_nodes):
                 for prey in range(g_v.Number_of_nodes):
                     for predator in range(g_v.Number_of_nodes):
-                        degree = self.graph_nodes[agent].degree() + 1
-                        actions = np.zeros(degree) + 1000
+                        # degree = self.graph_nodes[agent].degree() + 1
+                        # actions = np.zeros(degree) + 100000
+                        ustar = 1
                         if predator == agent:
-                            actions +=1000000
+                            # actions += 100000000
+                            ustar += 10000000
                         elif prey == agent:
-                            actions = np.zeros(degree)
+                            # actions = np.zeros(degree)
+                            ustar = 0
 
-                        q[(agent,prey,predator)] = actions
+                        q[(agent,prey,predator)] = ustar
         return q
 
     def propagate_pred_belief(self, pred_node_pos ,agent_node_pos):
@@ -50,6 +53,7 @@ class UstarGen:
             
         len_positions = self.graph_nodes[pred_node_pos].degree()
         positions = [x.pos for x in self.graph_nodes[pred_node_pos].neighbors]
+        # positions.append(self.graph_nodes[pred_node_pos].pos)
         for pos in positions:
             new_belief[pos] += 0.4/len_positions
 
@@ -78,7 +82,7 @@ class UstarGen:
         self.epochs = 100
 
         self.graph_nodes :list[Node]= g.graph_nodes
-        self.state = (41,14,14)
+        self.state = (0,22,44)
         self.filename = filename
         self.prey_transition_matrix = self.prey_transition()
 
@@ -93,24 +97,24 @@ class UstarGen:
     def run(self):
         for i in range(self.epochs):
             for state in self.qtable:
-                number_of_actions = len(self.qtable[state])
                 ustars = []
                 agent_pos, prey_pos, pred_pos = state
                 if agent_pos == prey_pos or agent_pos == pred_pos:
                     continue
                 neighbors = list(self.graph_nodes[agent_pos].neighbors)
+                number_of_actions = len(neighbors) + 1
                 for action in range(number_of_actions):
-                    if action != len(neighbors):
+                    if action != (number_of_actions - 1):
                         next_agent_pos = neighbors[action].pos
                     else:
                         next_agent_pos = agent_pos
                     
-                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                    #     ustars = [(action, 1)]
-                    #     break
-                    # if pred_pos == next_agent_pos:
-                    #     ustars.append((action, 10000))
-                    #     continue
+                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                        ustars = [1]
+                        break
+                    if pred_pos == next_agent_pos:
+                        ustars.append(10000)
+                        continue
 
                     s = 0
                     prey_prob = 1/len(self.prey_transition_matrix[prey_pos])
@@ -118,21 +122,22 @@ class UstarGen:
                     for next_prey_pos in self.prey_transition_matrix[prey_pos]:
                         for next_pred_pos in pred_prob_dict:
                             new_state = (next_agent_pos, next_prey_pos, next_pred_pos)
-                            s+= prey_prob * pred_prob_dict[next_pred_pos] * min(self.qtable[new_state])
+                            s+= prey_prob * pred_prob_dict[next_pred_pos] * self.qtable[new_state]
                     s+=1
-                    ustars.append((action, s))
+                    ustars.append(s)
 
-                beststar = min(ustars, key=lambda x: x[1])
-                best_action, best_u  = beststar[0], beststar[1]
-                self.qtable[state][best_action] = best_u
-            print(f'{min(self.qtable[self.state])}, {self.state}, {i+1}')
+                # beststar = min(ustars, key=lambda x: x[1])
+                bestustar = min(ustars)
+                # best_action, best_u  = beststar[0], beststar[1]
+                self.qtable[state] = bestustar
+            print(f'{self.qtable[self.state]}, {self.state}, {i+1}')
             self.save_qtable()
 
 if __name__ == '__main__':
     if not os.path.exists(g_v.qtable_folder):
         os.mkdir(g_v.qtable_folder)
     g : Graph = None
-    for filename in os.listdir(g_v.graph_folder)[1:]:
+    for filename in os.listdir(g_v.graph_folder)[:1]:
         with open(f'{g_v.graph_folder}/{filename}', 'rb') as f:
             g = pk.load(f)        
         
