@@ -89,7 +89,7 @@ if __name__ == "__main__":
         q = pk.load(f)
     for _ in range(iterations):
         victories = []
-        agents = [UstarAgent(qtable=q), VAgent(qtable=q)]
+        agents = [UstarAgent(utable=q), VAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         for agent in agents:
