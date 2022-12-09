@@ -77,7 +77,7 @@ class Graph:
         self.graph_nodes : list[Node] = []
         self.init_nodes()
         self.make_circle()
-        # self.add_new_edges()
+        self.add_new_edges()
 
     def get_random_positions(self):
         positions = list(range(g_v.Number_of_nodes))

@@ -22,7 +22,7 @@ class UstarGen:
                     for predator in range(g_v.Number_of_nodes):
                         # degree = self.graph_nodes[agent].degree() + 1
                         # actions = np.zeros(degree) + 100000
-                        ustar = 25
+                        ustar = 30
                         if predator == agent:
                             # actions += 100000000
                             ustar += 10000000
@@ -79,7 +79,7 @@ class UstarGen:
         return matrix
 
     def __init__(self, g: Graph, filename) -> None:
-        self.epochs = 100
+        self.epochs = 1000
 
         self.graph_nodes :list[Node]= g.graph_nodes
         self.state = (0,22,44)
@@ -109,11 +109,11 @@ class UstarGen:
                     else:
                         next_agent_pos = agent_pos
                     
-                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                        ustars = [1]
-                        break
+                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                    #     ustars = [1]
+                    #     break
                     if pred_pos == next_agent_pos:
-                        ustars.append(10000)
+                        ustars.append(1000000)
                         continue
 
                     s = 0
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     if not os.path.exists(g_v.utable_folder):
         os.mkdir(g_v.utable_folder)
     g : Graph = None
-    for filename in os.listdir(g_v.graph_folder)[:1]:
+    for filename in os.listdir(g_v.graph_folder)[1:2]:
         with open(f'{g_v.graph_folder}/{filename}', 'rb') as f:
             g = pk.load(f)        
         

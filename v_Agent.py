@@ -62,7 +62,7 @@ class VAgent(Agent):
         # with open('v2.pkl','rb') as f:
         #     self.v = pk.load(f)
 
-        self.v = torch.load("v3.boom")
+        self.v = torch.load("v4.boom")
 
         self.dist = dict()
 
