@@ -81,13 +81,10 @@ class UstarAgent(Agent):
             s+=1
             ustars.append(s)
         best_action = np.argmin(ustars)
-        # beststar = min(ustars, key=lambda x: x[1])
-        # best_action, best_u  = beststar[0], beststar[1]
         if best_action != len(neighbors):
             chosen = neighbors[best_action]
         else:
             chosen = self.node
-        # print(curr_state, min(self.utable[curr_state]), chosen.pos)
         return chosen
             
 

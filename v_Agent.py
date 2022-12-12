@@ -59,10 +59,10 @@ class VAgent(Agent):
         super().__init__(node)
         self.init = True
         self.utable = utable
-        # with open('v2.pkl','rb') as f:
-        #     self.v = pk.load(f)
+        with open('v2.pkl','rb') as f:
+            self.v = pk.load(f)
 
-        self.v = torch.load("v4.boom")
+        # self.v = torch.load("v4.boom")
 
         self.dist = dict()
 
@@ -106,9 +106,12 @@ class VAgent(Agent):
                     new_state.append(self.dist[(new_state[0], new_state[2])])
                     new_state.append(self.dist[(new_state[1], new_state[2])])
 
-                    
                     # s+= prey_prob * pred_prob_dict[next_pred_pos] * self.v.predict(np.array(new_state))[0]
-                    s+= prey_prob * pred_prob_dict[next_pred_pos] * float(self.v(torch.tensor(new_state, dtype=torch.float).cuda()))
+                    if new_state[0] == new_state [2]:
+                        s+= prey_prob * pred_prob_dict[next_pred_pos] * 1000000
+                    else:
+                        s+= prey_prob * pred_prob_dict[next_pred_pos] * self.v.predict(np.array(new_state))[0]
+                        # s+= prey_prob * pred_prob_dict[next_pred_pos] * float(self.v(torch.tensor(new_state, dtype=torch.float).cuda()))
             s+=1
             ustars.append(s)
         best_action = np.argmin(ustars)

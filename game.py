@@ -8,11 +8,13 @@ from Agent2 import Agent2
 from Agent3 import Agent3
 from Agent4 import Agent4
 from ustar_Agent import UstarAgent
+from upartial_Agent import UpartialAgent
 from v_Agent import VAgent
 import numpy as np
 import pickle as pk
 import os
 import imageio
+from neural import Learner, Sequential, Parameter, Linear, ReLu, mse_loss, mae_loss, AdamOptimizer
 
 class Game:
     def __init__(self, agent: Agent, graph: Graph) -> None:
@@ -73,23 +75,23 @@ class Game:
         return self.victory, self.timestep
 
 def run_game(agent):
-    with open('./graphs/graph_4.pkl','rb') as f:
+    with open('./graphs/graph_1.pkl','rb') as f:
         graph = pk.load(f)
     game = Game(agent, graph)
     return game.run()
 
 if __name__ == "__main__":
     a = perf_counter()
-    num_agents = 2
+    num_agents = 3
     iterations=100
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
-    with open('./utable/utable_graph_4.pkl','rb') as f:
+    with open('./utable/utable_graph_1.pkl','rb') as f:
         q = pk.load(f)
     for _ in range(iterations):
         victories = []
-        agents = [UstarAgent(utable=q), VAgent(utable=q)]
+        agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         for agent in agents:
