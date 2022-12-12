@@ -2,3 +2,4 @@ __pycache__/
 .dist/
 test.ipynb
 512/
+vpartial.pkl
