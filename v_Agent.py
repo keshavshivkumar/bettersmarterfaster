@@ -5,7 +5,7 @@ import numpy as np
 from graph_utils import agent_bfs, bfs
 from math import inf
 import numpy as np
-from neural import Learner, Sequential, Parameter, Linear, ReLu, mse_loss, mae_loss, AdamOptimizer
+from neural import Model, Sequential, Parameter, Linear, ReLu, mse_loss, mae_loss, AdamOptimizer
 import pickle as pk
 import torch
 import torch.nn as nn
@@ -59,7 +59,7 @@ class VAgent(Agent):
         super().__init__(node)
         self.init = True
         self.utable = utable
-        with open('v2.pkl','rb') as f:
+        with open('v5.pkl','rb') as f:
             self.v = pk.load(f)
 
         # self.v = torch.load("v4.boom")

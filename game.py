@@ -14,7 +14,8 @@ import numpy as np
 import pickle as pk
 import os
 import imageio
-from neural import Learner, Sequential, Parameter, Linear, ReLu, mse_loss, mae_loss, AdamOptimizer
+from neural import Model, Sequential, Parameter, Linear, ReLu, mse_loss, mae_loss, AdamOptimizer
+
 
 class Game:
     def __init__(self, agent: Agent, graph: Graph) -> None:
