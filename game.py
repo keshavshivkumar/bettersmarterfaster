@@ -76,9 +76,7 @@ class Game:
         # self.create_gif()
         return self.victory, self.timestep
 
-def run_game(agent):
-    with open('./graphs/graph_1.pkl','rb') as f:
-        graph = pk.load(f)
+def run_game(graph, agent):
     game = Game(agent, graph)
     return game.run()
 
@@ -91,13 +89,18 @@ if __name__ == "__main__":
     agent_caught = np.zeros(num_agents)
     with open('./utable/utable_graph_1.pkl','rb') as f:
         q = pk.load(f)
+
+    with open('./graphs/graph_1.pkl','rb') as f:
+        graph = pk.load(f)
     for _ in range(iterations):
         victories = []
         agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q), VpartialAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
+        graph.get_random_positions()
         for agent in agents:
-            v, timesteps = run_game(agent)
+            graph_copy = copy.deepcopy(graph)
+            v, timesteps = run_game(graph_copy, agent)
             victories.append(v)
             prey_guess_rate=agent.correct_prey_guess/timesteps
             predator_guess_rate=agent.correct_predator_guess/timesteps
