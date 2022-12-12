@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from graph_utils import bfs
 import pickle as pk
 from env import Graph, Node
+import pandas as pd
 
 class Parameter():
   def __init__(self, tensor):
@@ -134,37 +135,48 @@ def main():
     epochs = 5000
     learning_rate = 0.001
     model = Sequential(
-        Linear(6, 24),
+        Linear(52, 256),
         ReLu(),
-        Linear(24, 24),
+        Linear(256, 256),
         ReLu(),
-        Linear(24, 1),
+        Linear(256, 1),
         )
     l = Model(model, mae_loss, AdamOptimizer(lr=learning_rate))
-
-    with open('./utable/utable_graph_1.pkl', 'rb') as f:
-        q = pk.load(f)
-    with open('./graphs/graph_1.pkl', 'rb') as f:
-        g = pk.load(f)
-    X = [list(x) for x in q if x[0] != x[2]]
-    y = [[q[tuple(x)]] for x in X]
-    dist = dict()
-    for i in X:
-        if (i[0], i[1]) not in dist:
-            dist[(i[0], i[1])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[1]]))
-        if (i[0], i[2]) not in dist:
-            dist[(i[0], i[2])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[2]]))
-        if (i[1], i[2]) not in dist:
-            dist[(i[1], i[2])] = len(bfs(g.graph_nodes[i[1]], g.graph_nodes[i[2]]))
-        i.append(dist[(i[0], i[1])])
-        i.append(dist[(i[0], i[2])])
-        i.append(dist[(i[1], i[2])])
+    X, y = vpartial()
     X=np.array(X, dtype=float)
     y=np.array(y, dtype=float)
     loss=l.fit_batch(X, y, epochs=epochs)
     print(loss[-1])
-    with open('v5.pkl', 'wb') as f:
+    with open('vpartial.pkl', 'wb') as f:
       pk.dump(l, f)
+
+def vstar():
+  with open('./utable/utable_graph_1.pkl', 'rb') as f:
+    q = pk.load(f)
+  with open('./graphs/graph_1.pkl', 'rb') as f:
+    g = pk.load(f)
+  X = [list(x) for x in q if x[0] != x[2]]
+  y = [[q[tuple(x)]] for x in X]
+  dist = dict()
+  for i in X:
+      if (i[0], i[1]) not in dist:
+          dist[(i[0], i[1])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[1]]))
+      if (i[0], i[2]) not in dist:
+          dist[(i[0], i[2])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[2]]))
+      if (i[1], i[2]) not in dist:
+          dist[(i[1], i[2])] = len(bfs(g.graph_nodes[i[1]], g.graph_nodes[i[2]]))
+      i.append(dist[(i[0], i[1])])
+      i.append(dist[(i[0], i[2])])
+      i.append(dist[(i[1], i[2])])
+  return X, y
+
+def vpartial():
+  u = pd.read_csv('upartial.csv')
+  X = u.iloc[:,1:]
+  X = X.to_numpy()
+  y = u.iloc[:,:1]
+  y = y.to_numpy()
+  return X, y
 
 if __name__=='__main__':
     main()

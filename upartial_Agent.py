@@ -6,6 +6,7 @@ import numpy as np
 from graph_utils import agent_bfs, bfs
 from math import inf
 import numpy as np
+import csv
 
 class UpartialAgent(Agent):
 
@@ -116,11 +117,26 @@ class UpartialAgent(Agent):
         self.init = True
         self.belief = None
 
+    def write_to_csv(self, upartial, agent_pos, predator_pos):
+        with open('upartial.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            state = [upartial, agent_pos, predator_pos]
+            temp_state=[]
+            for i in range(50):
+                if i in self.belief:
+                    temp_state.append(self.belief[i])
+                else:
+                    temp_state.append(0)
+            state.extend(temp_state)
+            writer.writerow(state)
+
     def get_upartial(self, agent_pos, pred_pos):
         upartial = 0
         for prey_pos in self.belief:
             upartial += self.belief[prey_pos] * self.utable[(agent_pos, prey_pos, pred_pos)]
 
+        if upartial <50:
+            self.write_to_csv(upartial, agent_pos, pred_pos)
         return upartial
 
     def best_action(self, curr_state):
