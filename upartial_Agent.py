@@ -135,8 +135,8 @@ class UpartialAgent(Agent):
         for prey_pos in self.belief:
             upartial += self.belief[prey_pos] * self.utable[(agent_pos, prey_pos, pred_pos)]
 
-        if upartial <50:
-            self.write_to_csv(upartial, agent_pos, pred_pos)
+        # if upartial <50:
+        #     self.write_to_csv(upartial, agent_pos, pred_pos)
         return upartial
 
     def best_action(self, curr_state):
