@@ -9,6 +9,7 @@ from Agent3 import Agent3
 from Agent4 import Agent4
 from ustar_Agent import UstarAgent
 from upartial_Agent import UpartialAgent
+from vpartial_Agent import VpartialAgent
 from v_Agent import VAgent
 import numpy as np
 import pickle as pk
@@ -83,7 +84,7 @@ def run_game(agent):
 
 if __name__ == "__main__":
     a = perf_counter()
-    num_agents = 3
+    num_agents = 4
     iterations=100
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
@@ -92,7 +93,7 @@ if __name__ == "__main__":
         q = pk.load(f)
     for _ in range(iterations):
         victories = []
-        agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q)]
+        agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q), VpartialAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         for agent in agents:
@@ -113,6 +114,7 @@ if __name__ == "__main__":
 
     for w, l2, death, agent in zip(win, loss2, agent_caught, agents):
         print()
+        print(f"Agent: {agent.__class__.__name__}")
         print(f"win percentage: {(w/iterations)*100}")
         print(f"loss from timeout: {(l2/iterations)*100}")
         print(f"agent caught by predator: {(death/iterations)*100}")
