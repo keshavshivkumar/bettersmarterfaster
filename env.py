@@ -78,6 +78,7 @@ class Graph:
         self.init_nodes()
         self.make_circle()
         self.add_new_edges()
+        self.pos = None
 
     def get_random_positions(self):
         positions = list(range(g_v.Number_of_nodes))
@@ -90,11 +91,13 @@ class Graph:
         
         agent_pos = random.choice(positions)
 
-        return (prey_pos, pred_pos, agent_pos)
+        self.pos = (prey_pos, pred_pos, agent_pos)
 
  
     def spawn_entities(self, agent, prey, predator):
-        prey_pos, pred_pos, agent_pos = self.get_random_positions()
+        if self.pos == None:
+            self.get_random_positions()
+        prey_pos, pred_pos, agent_pos = self.pos
 
         self.graph_nodes[prey_pos].prey = True
         prey.node = self.graph_nodes[prey_pos]
