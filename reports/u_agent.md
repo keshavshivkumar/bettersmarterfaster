@@ -45,3 +45,23 @@ for all state in states:
 
 - Calculates the action which leads to min U* at each step and moves accordingly until game ends.
 - Moves that lead to agent to the current predator position are discouraged by giving it a high cost.
+
+## Grey box questions
+
+1. States where agent cannot catch predator: when agent and predator start from the same node. The agent will not be able to catch prey in this situation so $U^*$ for this state is set to $\infty$.
+2. Largest possible finite value of $U^*$ for our graph $\approx$ 16.707
+   
+   Visualization:
+   ![highest ustar at (41,14,14)](../initial_graph_highest.png)
+    `Agent: Blue` `Prey: Green` `Predator: Red`
+
+3. Performance of U* (in terms of timestep to catch Prey) to `Agent 1` and `Agent 2`.
+
+    ![comparison](../agentcomparison.png)
+
+    Average Timesteps (measured over 600 iterations):
+    - `Agent 1`: 14.3649
+    - `Agent 2`: 16.7453
+    - `U*Agent`: 7.58540
+
+4. States where U* agent makes different choices:

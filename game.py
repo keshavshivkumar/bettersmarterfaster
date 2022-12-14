@@ -91,8 +91,8 @@ def write_to_csv(stats):
 
 if __name__ == "__main__":
     a = perf_counter()
-    num_agents = 4
-    iterations=300
+    num_agents = 3
+    iterations=500
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
