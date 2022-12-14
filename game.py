@@ -1,4 +1,5 @@
 import copy
+import csv
 from time import perf_counter
 from env import Graph, Node
 from entities import Predator, Prey, Agent, DistractedPredator
@@ -26,7 +27,7 @@ class Game:
         self.graph = graph
         self.graph.spawn_entities(self.agent, self.prey, self.predator)
         self.agent.graph_nodes = graph.graph_nodes
-        self.maxtimestep = 150
+        self.maxtimestep = 50
         self.timestep = 0
         self.victory = (False, False)
 
@@ -80,10 +81,15 @@ def run_game(graph, agent):
     game = Game(agent, graph)
     return game.run()
 
+def write_to_csv(stats):
+    with open('stats12star.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(stats)
+
 if __name__ == "__main__":
     a = perf_counter()
     num_agents = 4
-    iterations=100
+    iterations=300
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
@@ -94,18 +100,27 @@ if __name__ == "__main__":
         graph = pk.load(f)
     for _ in range(iterations):
         victories = []
-        agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q), VpartialAgent(utable=q)]
+        # agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q), VpartialAgent(utable=q)]
+        agents = [Agent1(), Agent2(), UstarAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         graph.get_random_positions()
+        stats = []
+        flag =1
         for agent in agents:
             graph_copy = copy.deepcopy(graph)
             v, timesteps = run_game(graph_copy, agent)
+            if False not in v:
+                stats.append(timesteps)
+            else:
+                flag = 0
             victories.append(v)
             prey_guess_rate=agent.correct_prey_guess/timesteps
             predator_guess_rate=agent.correct_predator_guess/timesteps
             correct_prey_guess[agent]+=prey_guess_rate
             correct_predator_guess[agent]+=predator_guess_rate
+        if flag:
+            write_to_csv(stats)
 
         for i,victory in enumerate(victories):
             if False not in victory:

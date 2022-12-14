@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import numpy as np
 import matplotlib.pyplot as plt
 from graph_utils import bfs
@@ -6,9 +7,9 @@ from env import Graph, Node
 import pandas as pd
 
 class Parameter():
-  def __init__(self, tensor):
-    self.tensor = tensor
-    self.gradient = np.zeros_like(self.tensor)
+  def __init__(self, matrix):
+    self.matrix = matrix
+    self.gradient = np.zeros_like(self.matrix)
     self.beta1 = 0.9
     self.beta2 = 0.999
     self.m = 0
@@ -18,11 +19,12 @@ class Layer:
   def __init__(self):
     self.parameters = []
 
+  @abstractmethod
   def forward(self, X):
-    return X
+    pass
 
-  def build_param(self, tensor):
-    param = Parameter(tensor)
+  def build_param(self, matrix):
+    param = Parameter(matrix)
     self.parameters.append(param)
     return param
 
@@ -41,11 +43,11 @@ class Linear(Layer):
   def backprop(self, D):
     self.weights.gradient += np.matmul(self.X.T, D)
     self.bias.gradient += D.sum(axis=0)
-    return np.matmul(D, self.weights.tensor.T)
+    return np.matmul(D, self.weights.matrix.T)
 
   def forward(self, X):
     self.X = X
-    return np.matmul(X, self.weights.tensor) + self.bias.tensor
+    return np.matmul(X, self.weights.matrix) + self.bias.matrix
   
 class Sequential(Layer):
   def __init__(self, *layers):
@@ -54,18 +56,18 @@ class Sequential(Layer):
     for layer in layers:
       self.parameters.extend(layer.parameters)
 
-    self.backprops2 = []
+    self.backprops = []
 
   def backprop_model(self, D):
-    for backprop in reversed(self.backprops2):
+    for backprop in reversed(self.backprops):
       D = backprop(D)
     
   def forward(self, X):
-    self.backprops2 = []
+    self.backprops = []
     Y = X
     for layer in self.layers:
       Y = layer.forward(Y)
-      self.backprops2.append(layer.backprop)
+      self.backprops.append(layer.backprop)
     return Y
 
 class ReLu(Layer):
@@ -126,7 +128,7 @@ class AdamOptimizer():
     mhat = m/(1-beta1)
     vhat = v/(1-beta2)
 
-    param.tensor -= (self.lr * mhat)/(vhat**0.5 + 1e-8)
+    param.matrix -= (self.lr * mhat)/(vhat**0.5 + 1e-8)
     param.gradient.fill(0)
 
     return (beta1, beta2, m, v)
@@ -158,6 +160,8 @@ def vstar():
   X = [list(x) for x in q if x[0] != x[2]]
   y = [[q[tuple(x)]] for x in X]
   dist = dict()
+
+  #pre-processing
   for i in X:
       if (i[0], i[1]) not in dist:
           dist[(i[0], i[1])] = len(bfs(g.graph_nodes[i[0]], g.graph_nodes[i[1]]))

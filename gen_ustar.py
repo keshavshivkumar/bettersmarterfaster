@@ -20,14 +20,10 @@ class UstarGen:
             for agent in range(g_v.Number_of_nodes):
                 for prey in range(g_v.Number_of_nodes):
                     for predator in range(g_v.Number_of_nodes):
-                        # degree = self.graph_nodes[agent].degree() + 1
-                        # actions = np.zeros(degree) + 100000
-                        ustar = 30
+                        ustar = 50
                         if predator == agent:
-                            # actions += 100000000
-                            ustar += 10000000
+                            ustar = inf
                         elif prey == agent:
-                            # actions = np.zeros(degree)
                             ustar = 0
 
                         q[(agent,prey,predator)] = ustar
@@ -82,7 +78,7 @@ class UstarGen:
         self.epochs = 1000
 
         self.graph_nodes :list[Node]= g.graph_nodes
-        self.state = (0,22,44)
+        self.state = (0,1,16)
         self.filename = filename
         self.prey_transition_matrix = self.prey_transition()
 
@@ -109,11 +105,11 @@ class UstarGen:
                     else:
                         next_agent_pos = agent_pos
                     
-                    # if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
-                    #     ustars = [1]
-                    #     break
+                    if next_agent_pos == prey_pos and next_agent_pos != pred_pos:
+                        ustars = [1]
+                        break
                     if pred_pos == next_agent_pos:
-                        ustars.append(1000000)
+                        ustars.append(inf)
                         continue
 
                     s = 0
