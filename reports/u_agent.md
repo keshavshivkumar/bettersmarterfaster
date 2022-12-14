@@ -65,3 +65,21 @@ for all state in states:
     - `U*Agent`: 7.58540
 
 4. States where U* agent makes different choices:
+
+    - Agent 1 visualization
+    ![Agent1t0](../comparisons/initial_graph.png)
+    ![Agent1t1](../comparisons/Agent1_t1_with_arrow.png)
+    ![Agent1t2](../comparisons/Agent1_t2_with_arrow.png)
+    - Agent 2 visualization
+    ![Agent2t0](../comparisons/initial_graph.png)
+    ![Agent2t1](../comparisons/Agent2_t1_with_arrow.png)
+    ![Agent2t2](../comparisons/Agent2_t2_with_arrow.png)
+    - U* Agent visualization
+    ![AgentUt0](../comparisons/initial_graph.png)
+    ![AgentUt1](../comparisons/AgentU_t1_with_arrow.png)
+    ![AgentUt2](../comparisons/AgentU_t2_with_arrow.png)
+
+- On comparing the visualizations of each agent, a crucial distinction between Agent1/Agent2 and the U* Agent can be observed:
+    - Since the methodology of Agent 1 and Agent 2 were hard-coded a set of rules to make their way to the prey, the agents made it equal priority to move towards the prey while keeping the distance between themselves and the predator non-decreasing at best.
+    - The U* Agent had the utility precomputed, so it is aware of where it can catch the prey even if the gap between itself and the predator was closing.
+    - Therefore we can notice that the agents are faced with the dilemma of moving towards the prey at the cost of moving towards the predator as well. Agent 1 and 2 are designed to avoid getting close to the predator so they move away. The U* Agent, however, moves towards the prey and predator, while knowing it can avoid the predator. 
