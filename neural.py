@@ -7,9 +7,9 @@ from env import Graph, Node
 import pandas as pd
 
 class Parameter():
-  def __init__(self, matrix):
-    self.matrix = matrix
-    self.gradient = np.zeros_like(self.matrix)
+  def __init__(self, tensor):
+    self.tensor = tensor
+    self.gradient = np.zeros_like(self.tensor)
     self.beta1 = 0.9
     self.beta2 = 0.999
     self.m = 0
@@ -23,8 +23,8 @@ class Layer:
   def forward(self, X):
     pass
 
-  def build_param(self, matrix):
-    param = Parameter(matrix)
+  def build_param(self, tensor):
+    param = Parameter(tensor)
     self.parameters.append(param)
     return param
 
@@ -43,11 +43,11 @@ class Linear(Layer):
   def backprop(self, D):
     self.weights.gradient += np.matmul(self.X.T, D)
     self.bias.gradient += D.sum(axis=0)
-    return np.matmul(D, self.weights.matrix.T)
+    return np.matmul(D, self.weights.tensor.T)
 
   def forward(self, X):
     self.X = X
-    return np.matmul(X, self.weights.matrix) + self.bias.matrix
+    return np.matmul(X, self.weights.tensor) + self.bias.tensor
   
 class Sequential(Layer):
   def __init__(self, *layers):
@@ -128,7 +128,7 @@ class AdamOptimizer():
     mhat = m/(1-beta1)
     vhat = v/(1-beta2)
 
-    param.matrix -= (self.lr * mhat)/(vhat**0.5 + 1e-8)
+    param.tensor -= (self.lr * mhat)/(vhat**0.5 + 1e-8)
     param.gradient.fill(0)
 
     return (beta1, beta2, m, v)
