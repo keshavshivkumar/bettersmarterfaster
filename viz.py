@@ -46,8 +46,11 @@ def graph_viz(graph, agent_pos, prey_pos, predator_pos, timestep):
             colors.append('black')
     plt.figure(figsize=(8, 8))
     plt.title(f'Timestep: {timestep}', size = 15)
-    nx.draw_circular(G, edge_color ='black', node_color = colors, node_size = 80, font_size=8, font_color='white', with_labels=False)
+    nx.draw_circular(G, edge_color ='black', node_color = colors, node_size = 150, font_size=8, font_color='white', with_labels=False)
+    if timestep == 0:
+        plt.savefig(f'initial_graph.png')
+    st = '0'
     for i in range(5):
-        plt.savefig(f'viz/{timestep}_{i}.png')
+        plt.savefig('viz/'+st*(10-len(str(timestep)))+f'{timestep}_{i}.png')
     # plt.show()
 

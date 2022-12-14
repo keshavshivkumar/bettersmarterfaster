@@ -10,8 +10,10 @@ from Agent3 import Agent3
 from Agent4 import Agent4
 from ustar_Agent import UstarAgent
 from upartial_Agent import UpartialAgent
+from upartial_sharp import UpartialSharp
 from vpartial_Agent import VpartialAgent
 from v_Agent import VAgent
+from vpartial_sharp import VpartialSharp
 import numpy as np
 import pickle as pk
 import os
@@ -63,6 +65,7 @@ class Game:
         '''
         Update graph at every timestep
         '''
+        # self.game_viz() # uncomment to generate the initial graph png
         while(self.running()):
             # self.game_viz()
             self.timestep += 1

@@ -144,7 +144,7 @@ def main():
         Linear(256, 1),
         )
     l = Model(model, mae_loss, AdamOptimizer(lr=learning_rate))
-    X, y = vpartial()
+    X, y = vpartial(1)
     X=np.array(X, dtype=float)
     y=np.array(y, dtype=float)
     loss=l.fit_batch(X, y, epochs=epochs)
@@ -174,8 +174,11 @@ def vstar():
       i.append(dist[(i[1], i[2])])
   return X, y
 
-def vpartial():
-  u = pd.read_csv('upartial.csv')
+def vpartial(sharp):
+  if sharp:
+    u = pd.read_csv('usharp.csv')
+  else:
+    u = pd.read_csv('upartial.csv')
   X = u.iloc[:,1:]
   X = X.to_numpy()
   y = u.iloc[:,:1]
