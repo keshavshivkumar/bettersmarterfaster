@@ -29,7 +29,7 @@ class Game:
         self.graph = graph
         self.graph.spawn_entities(self.agent, self.prey, self.predator)
         self.agent.graph_nodes = graph.graph_nodes
-        self.maxtimestep = 50
+        self.maxtimestep = 150
         self.timestep = 0
         self.victory = (False, False)
 
@@ -85,14 +85,14 @@ def run_game(graph, agent):
     return game.run()
 
 def write_to_csv(stats):
-    with open('stats12star.csv', 'a', newline='') as f:
+    with open('stats34partial.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(stats)
 
 if __name__ == "__main__":
     a = perf_counter()
     num_agents = 3
-    iterations=500
+    iterations=600
     win = np.zeros(num_agents)
     loss2 = np.zeros(num_agents)
     agent_caught = np.zeros(num_agents)
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     for _ in range(iterations):
         victories = []
         # agents = [UstarAgent(utable=q), VAgent(utable=q), UpartialAgent(utable=q), VpartialAgent(utable=q)]
-        agents = [Agent1(), Agent2(), UstarAgent(utable=q)]
+        agents = [Agent3(), Agent4(), UpartialAgent(utable=q)]
         correct_prey_guess={agent:0 for agent in agents}
         correct_predator_guess={agent:0 for agent in agents}
         graph.get_random_positions()
