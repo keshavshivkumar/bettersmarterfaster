@@ -21,6 +21,7 @@ $$U_{partial}(s_{agent}, s_{predator}, \underbar{p}) = \sum_{s_{prey}} p_{s_{pre
 ## Observations
 
 - The agent's performance was close to the $U^*$ agent, around a 99.8% win rate.
+- The average # of timesteps was 29.938.
 
 ## Grey Box Questions
 

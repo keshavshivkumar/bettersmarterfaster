@@ -53,7 +53,7 @@
 
 ## Observations and Metrics
 
-- MAE error after 5000 epochs ~ 0.61
+- MAE error after 5000 epochs: ~ 0.61
 - The agent performed with a winrate of 100%.
 
 ## References
@@ -66,4 +66,4 @@ Performance against `U* Agent`:
 - 100% winrate, same as U* agent
 - Average timesteps taken for `V Agent`: 7.605, identical to `U* Agent`
 
-Their performance are identical to each other.
+Their performances are identical to each other.
