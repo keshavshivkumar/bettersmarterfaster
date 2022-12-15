@@ -15,6 +15,7 @@
 
 ## Observations
 
+- The MAE loss converges to ~0.27
 - The average win rate for the agent is 99.8%.
 - The average # of timesteps was 29.3609.
 - Its performance is no different from the `UpartialSharp` agent, and is thus not notably different from the `Upartial` and `Vpartial` agents.

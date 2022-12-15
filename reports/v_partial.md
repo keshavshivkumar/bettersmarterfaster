@@ -29,7 +29,7 @@
   - Loss (MAE loss) 
 - The `Vpartial` model is trained over 5000 epochs.
 - Overfitting becomes an issue here because there are infinite possible states due to the range of prey beliefs.
-- To avoid overfitting, the training should be stopped when the training and testing loss starts to vary too strongly.
+- To avoid overfitting, the training should be stopped when the training and testing losses start to vary too strongly.
 - On plotting the graphs of training and testing losses, the testing loss correlated to the training loss, implying the model did not overfit.
 ![Agent1t0](../comparisons/training_testing_loss.png)
 
