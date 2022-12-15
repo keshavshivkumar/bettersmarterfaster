@@ -67,16 +67,27 @@ for all state in states:
 4. States where U* agent makes different choices:
 
     - Agent 1 visualization
+
     ![Agent1t0](../comparisons/initial_graph.png)
+
     ![Agent1t1](../comparisons/Agent1_t1_with_arrow.png)
+
     ![Agent1t2](../comparisons/Agent1_t2_with_arrow.png)
+
     - Agent 2 visualization
+
     ![Agent2t0](../comparisons/initial_graph.png)
+
     ![Agent2t1](../comparisons/Agent2_t1_with_arrow.png)
+
     ![Agent2t2](../comparisons/Agent2_t2_with_arrow.png)
+
     - U* Agent visualization
+
     ![AgentUt0](../comparisons/initial_graph.png)
+
     ![AgentUt1](../comparisons/AgentU_t1_with_arrow.png)
+    
     ![AgentUt2](../comparisons/AgentU_t2_with_arrow.png)
 
 - On comparing the visualizations of each agent, a crucial distinction between Agent1/Agent2 and the U* Agent can be observed:
