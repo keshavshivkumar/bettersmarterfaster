@@ -99,6 +99,24 @@ class Model():
       print(f'Epoch: {epoch}, Loss: {Loss}')
     return losses
 
+  def test_train(self, X_train, y_train, X_test, y_test, epochs):
+    train_losses=[]
+    test_losses=[]
+    for epoch in range(epochs):
+      #train
+      Y_pred = self.model.forward(X_train)
+      Loss, Derivative = self.loss(Y_pred, y_train)
+      self.model.backprop_model(Derivative)
+      self.model.update(self.optimizer)
+      train_losses.append(Loss)
+
+      #test
+      Y_pred = self.model.forward(X_test)
+      Loss, Derivative = self.loss(Y_pred, y_test)
+      test_losses.append(Loss)
+      print(f'Epoch: {epoch}, Loss: {Loss}')
+    return train_losses, test_losses
+
   def predict(self, X):
     Y = self.model.forward(X)
     return Y
@@ -132,6 +150,18 @@ class AdamOptimizer():
     param.gradient.fill(0)
 
     return (beta1, beta2, m, v)
+
+def train_test_split(X,y):
+  l = len(X)
+  idxes = np.arange(0, l)
+  np.random.shuffle(idxes)
+  train_idx = int(0.8 * l)
+  X_train = X[idxes[:train_idx]]
+  X_test = X[idxes[train_idx:]]
+  y_train = y[idxes[:train_idx]]
+  y_test = y[idxes[train_idx:]]
+
+  return X_train, y_train, X_test, y_test
   
 def main():
     epochs = 5000
@@ -148,6 +178,13 @@ def main():
     X=np.array(X, dtype=float)
     y=np.array(y, dtype=float)
     loss=l.fit_batch(X, y, epochs=epochs)
+
+    # X_train, y_train, X_test, y_test = train_test_split(X,y)
+    # trainloss, testloss = l.test_train(X_train, y_train, X_test, y_test, 5000)
+    # plt.plot(trainloss, label="train loss")
+    # plt.plot(testloss, label="test loss")
+    # plt.legend(loc="upper right")
+    # plt.show()
     print(loss[-1])
     with open('vpartial.pkl', 'wb') as f:
       pk.dump(l, f)
